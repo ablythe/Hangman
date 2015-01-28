@@ -8,10 +8,13 @@ def hangman_initializer
       dictionary.push line
     end
   end
-
+  puts "Welcome to Hangman. Type 'quit' to end the game at any time."
   print "Want to supply a word or phrase? Enter y/n: "
   single = gets.chomp
-  if single == "n" 
+  if single.downcase == "quit"
+    puts "Thanks for playing"
+    exit
+  elsif single == "n" 
     prng = Random.new
     answer = dictionary[prng.rand(dictionary.size)]
   elsif single != "n" && single != "y"
@@ -20,7 +23,12 @@ def hangman_initializer
   else
     print "Enter answer word or phrase: "
     answer = gets.chomp
-    system "clear"
+    if answer == "quit"
+      puts "Thanks for playing"
+      exit
+    else
+      system "clear"
+    end
   end
 
   starting_lives = 10
@@ -67,15 +75,20 @@ def texter(life, guess, guessed_letters)
   puts "Guessed Letters: #{guessed_letters}"
   print "Guess a letter: "
   letter = gets.chomp
-  puts ""
-  if letter.downcase[/[a-z]/] && !guessed_letters.include?(letter.downcase) 
-    return letter
-  elsif letter.downcase[/[a-z]/]
-    puts "Letter already guessed, please try again: "
-    texter(life, guess, guessed_letters)
+  if letter.downcase == "quit"
+    puts "Thanks for Playing"
+    exit
   else
-    puts "Not a letter, please try again: "
-    texter(life, guess, guessed_letters)
+    puts ""
+    if letter.downcase[/[a-z]/] && !guessed_letters.include?(letter.downcase) && letter.length == 1
+      return letter.downcase
+    elsif letter.downcase[/[a-z]/] && letter.length == 1
+      puts "Letter already guessed, please try again: "
+      texter(life, guess, guessed_letters)
+    else
+      puts "Not a single letter, please try again: "
+      texter(life, guess, guessed_letters)
+    end
   end
 end
 
