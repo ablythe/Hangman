@@ -9,23 +9,32 @@ def hangman_initializer(lives, answer)
 end
 
 def hangman_player lives, guessed_letters, guess, answer
-  letter = texter(lives, guess, guessed_letters)
-  guess = guess
-  if answer.include?(letter)
-    counter = 0
-    answer.each_char do |current_letter|
-      if current_letter == letter
-        guess[counter] = letter
-        counter += 2
-      else
-        counter += 2
-      end
-    end
+  if !guess.include?("_")
+    puts guess
+    puts "You Win!"
+    return
+  elsif lives == 0
+    puts "Out of lives, you lose"
+    return
   else
-    lives -= 1
+    letter = texter(lives, guess, guessed_letters)
+    guess = guess
+    if answer.include?(letter)
+      counter = 0
+      answer.each_char do |current_letter|
+        if current_letter == letter
+          guess[counter] = letter
+          counter += 2
+        else
+          counter += 2
+        end
+      end
+    else
+      lives -= 1
+    end
+    guessed_letters << letter
+    hangman_player(lives, guessed_letters, guess, answer)
   end
-  guessed_letters << letter
-  hangman_player(lives, guessed_letters, guess, answer)
 end
 
 
