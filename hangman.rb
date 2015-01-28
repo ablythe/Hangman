@@ -1,8 +1,30 @@
 require "pry"
 
-def hangman_initializer(lives, answer)
+def hangman_initializer
+  dictionary = []
+  File.open("/usr/share/dict/words", "r").each_line do |line|
+    line.chomp! 
+    if line.length >=3 && line.length <= 10
+      dictionary.push line
+    end
+  end
+
+  print "Want to supply a word or phrase? Enter y/n: "
+  single = gets.chomp
+  if single == "n" 
+    prng = Random.new
+    answer = dictionary[prng.rand(dictionary.size)]
+  elsif single != "n" && single != "y"
+    puts "Invalid Input"
+    return
+  else
+    print "Enter answer word or phrase: "
+    answer = gets.chomp
+    system "clear"
+  end
+
+  starting_lives = 10
   answer_length = answer.length
-  starting_lives = lives
   guessed_letters = []
   guess = "_ " * answer_length
   hangman_player(starting_lives, guessed_letters, guess, answer)
@@ -15,6 +37,7 @@ def hangman_player lives, guessed_letters, guess, answer
     return
   elsif lives == 0
     puts "Out of lives, you lose"
+    puts "Answer was #{answer}"
     return
   else
     letter = texter(lives, guess, guessed_letters)
@@ -44,13 +67,17 @@ def texter(life, guess, guessed_letters)
   puts "Guessed Letters: #{guessed_letters}"
   print "Guess a letter: "
   letter = gets.chomp
-  if letter.downcase[/[a-z]/]
+  puts ""
+  if letter.downcase[/[a-z]/] && !guessed_letters.include?(letter.downcase) 
     return letter
+  elsif letter.downcase[/[a-z]/]
+    puts "Letter already guessed, please try again: "
+    texter(life, guess, guessed_letters)
   else
-    puts "Not a letter, please try again:"
+    puts "Not a letter, please try again: "
     texter(life, guess, guessed_letters)
   end
 end
 
 
-hangman_initializer(5, "food")
+hangman_initializer
