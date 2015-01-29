@@ -22,7 +22,7 @@ def hangman_initializer
     return
   else
     print "Enter answer word or phrase: "
-    answer = gets.chomp
+    answer = gets.chomp.downcase
     if answer == "quit"
       puts "Thanks for playing"
       exit
@@ -35,6 +35,15 @@ def hangman_initializer
   answer_length = answer.length
   guessed_letters = []
   guess = "_ " * answer_length
+  count = 0
+  answer.each_char do |current|
+    if current == " "
+      guess[count] = " "
+      count += 2
+    else
+      count += 2
+    end
+  end
   hangman_player(starting_lives, guessed_letters, guess, answer)
 end
 
