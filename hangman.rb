@@ -1,4 +1,4 @@
-require "pry"
+
 
 def hangman_initializer
   dictionary = []
